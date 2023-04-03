@@ -1,0 +1,106 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marimatt <marimatt@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/21 18:22:52 by marimatt          #+#    #+#             */
+/*   Updated: 2022/07/21 18:22:52 by marimatt         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "./philo.h"
+
+void	check_and_kill_all_pids(int *pid, int n)
+{
+	int	i;
+
+	i = 0;
+	while (waitpid(pid[i], NULL, WNOHANG) == 0)
+	{
+		i++;
+		if (i == n)
+			i = 0;
+	}
+	kill_all_pids(pid, n);
+}
+
+void	ft_clear_stuff(t_data *par)
+{
+	sem_close(par->forks_semaphore);
+	sem_close(par->print_semaphore);
+	sem_close(par->eat_semaphore);
+	sem_unlink("/forks_semaphore");
+	sem_unlink("/print_semaphore");
+	sem_unlink("/eat_semaphore");
+}
+
+int	ft_init_semaphores(t_data *par, int retry)
+{
+	if (retry == 0)
+		return (-1);
+	sem_unlink("/forks_semaphore");
+	sem_unlink("/print_semaphore");
+	sem_unlink("/eat_semaphore");
+	par->print_semaphore = sem_open("/print_semaphore", O_CREAT, S_IRWXU, 1);
+	if (par->print_semaphore == SEM_FAILED)
+		return (ft_init_semaphores(par, retry - 1));
+	par->forks_semaphore = sem_open("/forks_semaphore", O_CREAT, S_IRWXU, par->n);
+	if (par->forks_semaphore == SEM_FAILED)
+	{
+		sem_close(par->print_semaphore);
+		return (ft_init_semaphores(par, retry - 1));
+	}
+	par->eat_semaphore = sem_open("/eat_semaphore", O_CREAT, S_IRWXU, 0);
+	if (par->eat_semaphore == SEM_FAILED)
+	{
+		sem_close(par->print_semaphore);
+		sem_close(par->forks_semaphore);
+		return (ft_init_semaphores(par, retry - 1));
+	}
+	return (1);
+}
+
+void	*ft_check_eat(void *params)
+{
+	t_data	*par;
+	int		i;
+
+	par = (t_data *)params;
+	i = 0;
+	while (i < par->n)
+	{
+		if (sem_wait(par->eat_semaphore) == 0)
+			i++;
+	}
+	kill_all_pids(par->pid, par->n);
+	ft_clear_stuff(par);
+	exit(0);
+	return (NULL);
+}
+
+int	main(int argc, char **argv)
+{
+	t_data		*par;
+	int			*pid;
+	pthread_t	t_check_eat;
+
+	if (ft_parse_args(&par, argv, argc) < 0)
+		return (1);
+	if (ft_init_int_pointer(&pid, 0, par->n) < 0)
+		return (1);
+	if (ft_init_semaphores(par, 3) < 0)
+		return (1);
+	if (fork_philos(par, &pid) > 0)
+	{
+		if (par->n_must_eat > 0)
+		{
+			if (pthread_create(&t_check_eat, NULL, &ft_check_eat, (void *)par) != 0)
+				kill_all_pids(pid, par->n);
+		}
+		check_and_kill_all_pids(pid, par->n);
+	}
+	ft_clear_stuff(par);
+	return (0);
+}
