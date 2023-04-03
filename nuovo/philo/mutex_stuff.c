@@ -6,7 +6,7 @@
 /*   By: marimatt <marimatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 13:33:50 by marimatt          #+#    #+#             */
-/*   Updated: 2022/07/21 17:46:18 by marimatt         ###   ########.fr       */
+/*   Updated: 2023/04/03 15:58:10 by marimatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,28 @@ int	ft_unlock_with_ret(pthread_mutex_t *mtx, int val)
 int	ft_malloc_mutex(t_data *par)
 {
 	par->mutex_print = (pthread_mutex_t *)malloc(sizeof(*(par->mutex_print)));
-	if (par->mutex_print == NULL || \
-		pthread_mutex_init(par->mutex_print, NULL) != 0)
+	if (par->mutex_print == NULL)
 		return (-1);
+	if (pthread_mutex_init(par->mutex_print, NULL) != 0)
+	{
+		free(par->mutex_print);
+		return (-1);
+	}
 	par->mutex_forks = (pthread_mutex_t **)malloc(sizeof(*(par->mutex_forks)) \
 							* par->n);
+	if (par->mutex_forks == NULL)
+	{
+		free(par->mutex_print);
+		return (-1);
+	}
 	par->mutex_lifes = (pthread_mutex_t **)malloc(sizeof(*(par->mutex_lifes)) \
 							* par->n);
-	if (par->mutex_forks == NULL || par->mutex_lifes == NULL)
+	if (par->mutex_lifes == NULL)
+	{
+		free(par->mutex_print);
+		free(par->mutex_forks);
 		return (-1);
+	}
 	return (1);
 }
 

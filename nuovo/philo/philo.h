@@ -6,7 +6,7 @@
 /*   By: marimatt <marimatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 14:45:39 by marimatt          #+#    #+#             */
-/*   Updated: 2023/03/27 15:31:44 by marimatt         ###   ########.fr       */
+/*   Updated: 2023/04/03 16:05:27 by marimatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void				wait_joined_threads(pthread_t *philo_t, int n);
 
 // philo_utils
 void				free_philo_and_global_params(t_philo **philo, t_data *par);
-int					ft_init_threads(pthread_t **philos, int n);
+int					ft_init_threads_pointers(pthread_t **philos, int n);
 t_philo				**assign_philo_par(t_data *params);
 int					ft_run_all_philos(pthread_t *philos, t_philo **philo_par, \
 										t_data *params);

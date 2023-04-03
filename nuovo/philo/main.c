@@ -6,7 +6,7 @@
 /*   By: marimatt <marimatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 13:25:19 by marimatt          #+#    #+#             */
-/*   Updated: 2023/03/27 15:51:25 by marimatt         ###   ########.fr       */
+/*   Updated: 2023/04/03 16:06:45 by marimatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,16 +72,16 @@ void	wait_joined_threads(pthread_t *philo_t, int n)
 
 int	main(int argc, char **argv)
 {
+	t_data				*global_params;
 	pthread_t			*philo_th;
 	t_philo				**philo_par;
-	t_data				*global_params;
 
 	global_params = ft_parse_arguments(argv, argc);
 	if (global_params == NULL)
 		return (1);
 	if (ft_init_mutex(global_params) < 0)
 		return (1);
-	if (ft_init_threads(&philo_th, global_params->n) < 0)
+	if (ft_init_threads_pointers(&philo_th, global_params->n) < 0)
 		return (1);
 	philo_par = assign_philo_par(global_params);
 	if (philo_par == NULL)
@@ -94,5 +94,6 @@ int	main(int argc, char **argv)
 		free(philo_th);
 		return (0);
 	}
+	free(philo_th);
 	return (1);
 }

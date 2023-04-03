@@ -6,13 +6,13 @@
 /*   By: marimatt <marimatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 14:23:26 by marimatt          #+#    #+#             */
-/*   Updated: 2023/03/27 15:21:15 by marimatt         ###   ########.fr       */
+/*   Updated: 2023/04/03 16:05:27 by marimatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-int	ft_init_threads(pthread_t **philo_t, int n)
+int	ft_init_threads_pointers(pthread_t **philo_t, int n)
 {
 	*philo_t = (pthread_t *)malloc(sizeof(**philo_t) * n);
 	if (*philo_t == NULL)
