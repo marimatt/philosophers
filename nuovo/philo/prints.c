@@ -6,7 +6,7 @@
 /*   By: marimatt <marimatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 13:25:19 by marimatt          #+#    #+#             */
-/*   Updated: 2022/07/14 15:02:32 by marimatt         ###   ########.fr       */
+/*   Updated: 2023/04/03 17:24:13 by marimatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,16 @@ int	ft_timestp_by_time(long long int t_now, long long int t_start)
 
 int	ft_print_msg(t_philo *par, char *msg)
 {
-	int	t;
+	// int	t;
 
 	pthread_mutex_lock(par->mutex_print);
-	if (*(par->end_game) == 0)
+	if (*(par->game_over) > 0)
 	{
-		t = ft_timestp(par->glob->t_start);
-		printf("%d %d %s\n", t, par->pos, msg);
 		pthread_mutex_unlock(par->mutex_print);
-		return (1);
+		return (-1);
 	}
+	// t = ft_timestp(par->t_start);
+	printf("%d %d %s\n", ft_timestp(par->t_start), par->pos, msg);
 	pthread_mutex_unlock(par->mutex_print);
-	return (-1);
+	return (1);
 }

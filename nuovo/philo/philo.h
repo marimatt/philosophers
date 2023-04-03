@@ -6,7 +6,7 @@
 /*   By: marimatt <marimatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 14:45:39 by marimatt          #+#    #+#             */
-/*   Updated: 2023/04/03 16:05:27 by marimatt         ###   ########.fr       */
+/*   Updated: 2023/04/03 17:04:29 by marimatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ typedef struct s_data
 	long long int		t_die;
 	long long int		t_eat;
 	long long int		t_sleep;
-	long long int		neat;
-	long long int		t_start;
+	long long int		min_eat;
 	pthread_mutex_t		**mutex_forks;
 	pthread_mutex_t		**mutex_lifes;
 	pthread_mutex_t		*mutex_print;
@@ -34,15 +33,20 @@ typedef struct s_data
 
 typedef struct s_philo
 {
+	int					n;
+	long long int		t_die;
+	long long int		t_eat;
+	long long int		t_sleep;
+	long long int		min_eat;
+	long long int		t_start;
 	pthread_mutex_t		*mutex_f_l;
 	pthread_mutex_t		*mutex_f_r;
 	pthread_mutex_t		*mutex_print;
 	pthread_mutex_t		*mutex_life;
-	t_data				*glob;
 	long long int		t_last_meal;
 	int					eat_ok;
 	int					pos;
-	int					*end_game;
+	int					*game_over;
 }			t_philo;
 
 int					ft_atoi(const char *str);

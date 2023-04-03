@@ -6,7 +6,7 @@
 /*   By: marimatt <marimatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 13:25:19 by marimatt          #+#    #+#             */
-/*   Updated: 2023/04/03 16:06:45 by marimatt         ###   ########.fr       */
+/*   Updated: 2023/04/03 17:32:42 by marimatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,15 @@ int	have_all_philos_eat_ok(t_philo **philo_par, int n)
 
 int	did_someone_died(t_philo **philo_p, int n)
 {
-	long long int	t_now;
-
-	t_now = ft_get_micros();
 	while (n > 0)
 	{
 		n--;
 		pthread_mutex_lock(philo_p[n]->mutex_life);
-		if (t_now >= (philo_p[n])->t_last_meal + (philo_p[n])->glob->t_die)
+		if (ft_get_micros() >= (philo_p[n])->t_last_meal + (philo_p[n])->t_die)
 		{
 			pthread_mutex_lock(philo_p[0]->mutex_print);
-			*(philo_p[0]->end_game) = 1;
-			printf("%d %d %s\n", ft_timestp(philo_p[0]->glob->t_start), \
+			*(philo_p[0]->game_over) = 1;
+			printf("%d %d %s\n", ft_timestp(philo_p[0]->t_start), \
 				n + 1, "died");
 			pthread_mutex_unlock(philo_p[0]->mutex_print);
 			pthread_mutex_unlock(philo_p[n]->mutex_life);
@@ -51,10 +48,10 @@ void	start_main_cycle(t_philo **philo_p, t_data *params)
 {
 	while (did_someone_died(philo_p, params->n) < 0)
 	{
-		if (params->neat > 0 && have_all_philos_eat_ok(philo_p, params->n) > 0)
+		if (params->min_eat > 0 && have_all_philos_eat_ok(philo_p, params->n) > 0)
 		{
 			pthread_mutex_lock(philo_p[0]->mutex_print);
-			*(philo_p[0]->end_game) = 1;
+			*(philo_p[0]->game_over) = 1;
 			pthread_mutex_unlock(philo_p[0]->mutex_print);
 			return ;
 		}
@@ -86,7 +83,7 @@ int	main(int argc, char **argv)
 	philo_par = assign_philo_par(global_params);
 	if (philo_par == NULL)
 		return (1);
-	if (ft_run_all_philos(philo_th, philo_par, global_params) == global_params->n)
+	if (ft_run_all_philos(philo_th, philo_par, global_params) > 0)
 	{
 		start_main_cycle(philo_par, global_params);
 		wait_joined_threads(philo_th, global_params->n);

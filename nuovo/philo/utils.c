@@ -6,7 +6,7 @@
 /*   By: marimatt <marimatt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/07 13:22:49 by marimatt          #+#    #+#             */
-/*   Updated: 2023/04/03 15:47:15 by marimatt         ###   ########.fr       */
+/*   Updated: 2023/04/03 16:59:42 by marimatt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,11 @@ t_data	*ft_parse_arguments(char **argv, int argc)
 	global_params->t_die = 1000 * ft_atoi(argv[2]);
 	global_params->t_eat = 1000 * ft_atoi(argv[3]);
 	global_params->t_eat = 1000 * ft_atoi(argv[4]);
-	global_params->neat = -1;
+	global_params->min_eat = -1;
 	if (argc == 6)
-		global_params->neat = ft_atoi(argv[5]);
+		global_params->min_eat = ft_atoi(argv[5]);
 	if (global_params->n <= 0 || global_params->t_die < 0 || global_params->t_eat < 0 \
-			|| global_params->t_eat < 0 || (argc == 6 && global_params->neat < 0))	
+			|| global_params->t_eat < 0 || (argc == 6 && global_params->min_eat < 0))	
 	{
 		free(global_params);
 		global_params = NULL;
