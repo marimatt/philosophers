@@ -85,23 +85,23 @@ int	get_forks(t_philo *par, pthread_mutex_t *mutex_1, pthread_mutex_t *mutex_2)
 		return (ft_unlock_with_ret(mutex_1, -1));
 
 	pthread_mutex_lock(mutex_2);
-	pthread_mutex_lock(par->mutex_life);
+	// pthread_mutex_lock(par->mutex_life);
 	par->t_last_meal = ft_get_micros();
 	pthread_mutex_lock(par->mutex_print);
 	if (*(par->game_over) == 0)
 	{
 		ft_print_meal(ft_get_micros(), par->t_start, par->pos);
 		pthread_mutex_unlock(par->mutex_print);
-		pthread_mutex_unlock(par->mutex_life);
+		// pthread_mutex_unlock(par->mutex_life);
 	}
 	else
 	{
 		pthread_mutex_unlock(mutex_2);
 		pthread_mutex_unlock(mutex_1);
-		pthread_mutex_unlock(par->mutex_life);
+		// pthread_mutex_unlock(par->mutex_life);
 		return (ft_unlock_with_ret(par->mutex_print, -1));
 	}
 	ft_usleep(par->t_eat);
-	pthread_mutex_unlock(mutex_2);
-	return (ft_unlock_with_ret(mutex_1, 1));
+	pthread_mutex_unlock(mutex_1);
+	return (ft_unlock_with_ret(mutex_2, 1));
 }
