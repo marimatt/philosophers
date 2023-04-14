@@ -19,7 +19,7 @@ int	ft_usleep(long long int dt)
 	if (dt <= 0)
 		return (1);
 	t_end = ft_get_micros() + dt - 50;
-	while (ft_get_micros() < t_end)
+	while (ft_get_micros() <= t_end)
 		usleep(50);
 	return (1);
 }
@@ -54,31 +54,6 @@ long long int	ft_get_micros(void)
 	res = ((long long int)(current_time.tv_sec)) * 1000000;
 	res += (long long int)(current_time.tv_usec);
 	return (res);
-}
-
-t_data	*ft_parse_arguments(char **argv, int argc)
-{
-	t_data	*global_params;
-
-	if (argc < 5 || argc > 6)
-		return (NULL);
-	global_params = (t_data*)malloc(sizeof(t_data) * 1);
-	if (global_params == NULL)
-		return (NULL);
-	global_params->n = ft_atoi(argv[1]);
-	global_params->t_die = 1000 * ft_atoi(argv[2]);
-	global_params->t_eat = 1000 * ft_atoi(argv[3]);
-	global_params->t_eat = 1000 * ft_atoi(argv[4]);
-	global_params->min_eat = -1;
-	if (argc == 6)
-		global_params->min_eat = ft_atoi(argv[5]);
-	if (global_params->n <= 0 || global_params->t_die < 0 || global_params->t_eat < 0 \
-			|| global_params->t_eat < 0 || (argc == 6 && global_params->min_eat < 0))	
-	{
-		free(global_params);
-		global_params = NULL;
-	}
-	return (global_params);
 }
 
 int	ft_init_int_pointer(int **ptr, int val)

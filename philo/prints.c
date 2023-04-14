@@ -24,15 +24,12 @@ int	ft_timestp_by_time(long long int t_now, long long int t_start)
 
 int	ft_print_msg(t_philo *par, char *msg)
 {
-	// int	t;
-
 	pthread_mutex_lock(par->mutex_print);
 	if (*(par->game_over) > 0)
 	{
 		pthread_mutex_unlock(par->mutex_print);
 		return (-1);
 	}
-	// t = ft_timestp(par->t_start);
 	printf("%d %d %s\n", ft_timestp(par->t_start), par->pos, msg);
 	pthread_mutex_unlock(par->mutex_print);
 	return (1);

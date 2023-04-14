@@ -13,7 +13,7 @@
 NAME	    =		philo
 
 SRC     	=		main.c ft_atoi.c utils.c mutex_stuff.c \
-					prints.c philo_life.c philos_utils.c \
+					prints.c philo_life.c philos_utils.c init_stuff.c \
 
 CFLAGS  	=		-Wall -Werror -Wextra
 

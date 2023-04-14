@@ -19,7 +19,7 @@
 # include <sys/time.h>
 # include <stdlib.h>
 
-typedef struct s_data
+typedef struct s_globals
 {
 	int					n;
 	long long int		t_die;
@@ -27,9 +27,9 @@ typedef struct s_data
 	long long int		t_sleep;
 	long long int		min_eat;
 	pthread_mutex_t		**mutex_forks;
-	pthread_mutex_t		**mutex_lifes;
+	pthread_mutex_t		**mutex_meals;
 	pthread_mutex_t		*mutex_print;
-}			t_data;
+}			t_globals;
 
 typedef struct s_philo
 {
@@ -42,7 +42,7 @@ typedef struct s_philo
 	pthread_mutex_t		*mutex_f_l;
 	pthread_mutex_t		*mutex_f_r;
 	pthread_mutex_t		*mutex_print;
-	pthread_mutex_t		*mutex_life;
+	pthread_mutex_t		*mutex_meal;
 	long long int		t_last_meal;
 	int					eat_ok;
 	int					pos;
@@ -55,26 +55,26 @@ int					ft_atoi(const char *str);
 int					ft_usleep(long long int dt);
 int					ft_usleep_2(long long int dt);
 long long int		ft_get_micros(void);
-t_data				*ft_parse_arguments(char **argv, int argc);
+t_globals				*ft_parse_arguments(char **argv, int argc);
 int					ft_init_int_pointer(int **ptr, int val);
 
 // mutex_stuff
-int					ft_init_mutex(t_data *par);
+int					ft_init_mutex(t_globals *par);
 int					get_forks(t_philo *par, pthread_mutex_t *mutex_1, \
 								pthread_mutex_t *mutex_2);
 
 // main
 int					did_someone_died(t_philo **philo_p, int n);
 int					have_all_philos_eat_ok(t_philo **philo_par, int n);
-void				start_main_cycle(t_philo **philo_par, t_data *params);
+void				start_main_cycle(t_philo **philo_par, t_globals *params);
 void				wait_joined_threads(pthread_t *philo_t, int n);
 
 // philo_utils
-void				free_philo_and_global_params(t_philo **philo, t_data *par);
+void				free_all(t_philo **philo, pthread_t *philo_t, t_globals *par);
 int					ft_init_threads_pointers(pthread_t **philos, int n);
-t_philo				**assign_philo_par(t_data *params);
-int					ft_run_all_philos(pthread_t *philos, t_philo **philo_par, \
-										t_data *params);
+t_philo				**assign_philo_par(t_globals *globals);
+int					ft_run_all_philos(pthread_t *philo_th, t_philo **philo_par, \
+										t_globals *globals);
 
 // philo_life
 int					ft_get_meal(t_philo *par, int *eats);
