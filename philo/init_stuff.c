@@ -81,7 +81,7 @@ void	fill_res(t_philo *res, int pos, t_globals *globals, int *game_over)
 	res->min_eat = globals->min_eat;
 	res->game_over = game_over;
 	res->pos = pos;
-	res->eat_ok = 0;
+	res->n_eats = 0;
 }
 
 t_philo	**assign_philo_par(t_globals *globals)

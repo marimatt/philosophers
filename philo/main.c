@@ -12,12 +12,12 @@
 
 #include "./philo.h"
 
-int	have_all_philos_eat_ok(t_philo **philo_p, int n)
+int	have_all_philos_eat_ok(t_philo **philo_p, int n, int min_eat)
 {
 	while (n > 0)
 	{
 		n--;
-		if ((philo_p[n])->eat_ok == 0)
+		if ((philo_p[n])->n_eats < min_eat)
 			return (-1);
 	}
 	return (1);
@@ -29,17 +29,16 @@ int	did_someone_died(t_philo **philo_p, int n)
 	{
 		n--;
 		pthread_mutex_lock(philo_p[n]->mutex_meal);
-		if (ft_get_micros() >= (philo_p[n])->t_last_meal + (philo_p[n])->t_die)
+		if (ft_get_micros() > (philo_p[n])->t_last_meal + (philo_p[n])->t_die)
 		{
 			pthread_mutex_lock(philo_p[0]->mutex_print);
 			*(philo_p[0]->game_over) = 1;
-			printf("%d %d %s\n", ft_timestp(philo_p[0]->t_start), n + 1, "died(main)");
+			printf("%d %d %s\n", ft_timestp(philo_p[0]->t_start), philo_p[n]->pos, "died");
 			pthread_mutex_unlock(philo_p[n]->mutex_meal);
 			pthread_mutex_unlock(philo_p[0]->mutex_print);
-			return (n + 1);
+			return (philo_p[n]->pos);
 		}
-		else
-			pthread_mutex_unlock(philo_p[n]->mutex_meal);
+		pthread_mutex_unlock(philo_p[n]->mutex_meal);
 	}
 	return (-1);
 }
@@ -48,7 +47,8 @@ void	start_main_cycle(t_philo **philo_p, t_globals *globals)
 {
 	while (did_someone_died(philo_p, globals->n) < 0)
 	{
-		if (globals->min_eat > 0 && have_all_philos_eat_ok(philo_p, globals->n) > 0)
+		if (globals->min_eat > 0 && \
+			have_all_philos_eat_ok(philo_p, globals->n, globals->min_eat) > 0)
 		{
 			pthread_mutex_lock(philo_p[0]->mutex_print);
 			*(philo_p[0]->game_over) = 1;

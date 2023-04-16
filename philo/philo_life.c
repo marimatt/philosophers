@@ -12,56 +12,88 @@
 
 #include "./philo.h"
 
-int	ft_get_meal(t_philo *p, int *eats)
+int	ft_unlock_with_ret(pthread_mutex_t *mtx, int val)
+{
+	pthread_mutex_unlock(mtx);
+	return (val);
+}
+
+int	ft_get_forks(t_philo *par, pthread_mutex_t *mutex_1, pthread_mutex_t *mutex_2)
+{
+	long long int	t_meal;
+
+	pthread_mutex_lock(mutex_1);
+	if (ft_print_msg(par, "has taken a fork") < 0)
+		return (ft_unlock_with_ret(mutex_1, -1));
+	pthread_mutex_lock(mutex_2);
+	t_meal = ft_get_micros();
+	pthread_mutex_lock(par->mutex_meal);
+	par->t_last_meal = t_meal;
+	pthread_mutex_unlock(par->mutex_meal);
+	pthread_mutex_lock(par->mutex_print);
+	if (*(par->game_over) > 0)
+	{
+		pthread_mutex_unlock(mutex_1);
+		pthread_mutex_unlock(mutex_2);
+		return (ft_unlock_with_ret(par->mutex_print, -1));
+	}
+	t_meal -= par->t_start;
+	printf("%d %d %s\n", (int)(t_meal / 1000), par->pos, "has taken a fork");
+	printf("%d %d %s\n", (int)(t_meal / 1000), par->pos, "is eating");
+	pthread_mutex_unlock(par->mutex_print);
+	ft_usleep_2(par->t_eat);
+	pthread_mutex_unlock(mutex_1);
+	return (ft_unlock_with_ret(mutex_2, 1));
+}
+
+int	ft_get_meal(t_philo *p)
 {
 	if (p->n % 2 == 0)
 	{
-		// if (p->pos % 2 == (*eats + 1))
-		// 	ft_usleep((long long int)(p->t_eat * 0.75));
-
+		if ((p->pos + p->n_eats) % 2 == 0)
+			ft_usleep_2(p->t_eat / 2);
 		if (p->pos % 2 == 0)
-			return (get_forks(p, p->mutex_f_l, p->mutex_f_r));
+			return (ft_get_forks(p, p->mutex_f_l, p->mutex_f_r));
+		return (ft_get_forks(p, p->mutex_f_r, p->mutex_f_l));
 
-		return (get_forks(p, p->mutex_f_r, p->mutex_f_l));
 	}
 	else
 	{
-		if (p->pos % 2 == (*eats + 1))
-			ft_usleep(p->t_eat - 50);
-
-		return (get_forks(p, p->mutex_f_l, p->mutex_f_r));
+		if ((p->pos + p->n_eats) % 2 == 0)
+			ft_usleep_2(p->t_eat / 2);
+		else if ((p->pos + 1) % p->n == p->n_eats % p->n)
+			ft_usleep_2(p->t_eat);
+		return (ft_get_forks(p, p->mutex_f_l, p->mutex_f_r));
 	}
 }
 
-void	ft_sleep_and_think(t_philo *par, int *eats)
+void	ft_sleep_and_think(t_philo *par)
 {
-	*eats += 1;
-	if (par->min_eat > 0 && *eats >= par->min_eat && par->eat_ok == 0)
-		par->eat_ok = 1;
+	par->n_eats += 1;
 	if (ft_print_msg(par, "is sleeping") < 0)
 		return ;
-	ft_usleep(par->t_sleep);
+	ft_usleep_2(par->t_sleep);
 	ft_print_msg(par, "is thinking");
 }
 
 void	*run_philo(void *params)
 {
 	t_philo	*par;
-	int		eats;
 
 	par = (t_philo *)params;
-	eats = 0;
+	pthread_mutex_lock(par->mutex_meal);
+	pthread_mutex_unlock(par->mutex_meal);
 	par->t_last_meal = ft_get_micros();
 	if (par->n == 1)
 	{
 		ft_print_msg(par, "has taken a fork");
-		ft_usleep(par->t_die);
+		ft_usleep_2(par->t_die);
 		return (NULL);
 	}
 	while (*(par->game_over) < 0)
 	{
-		if (ft_get_meal(par, &eats) >= 0)
-			ft_sleep_and_think(par, &eats);
+		if (ft_get_meal(par) >= 0)
+			ft_sleep_and_think(par);
 		else
 			break ;
 	}

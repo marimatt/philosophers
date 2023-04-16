@@ -19,7 +19,7 @@ int	ft_usleep(long long int dt)
 	if (dt <= 0)
 		return (1);
 	t_end = ft_get_micros() + dt - 50;
-	while (ft_get_micros() <= t_end)
+	while (ft_get_micros() < t_end)
 		usleep(50);
 	return (1);
 }
@@ -28,18 +28,14 @@ int	ft_usleep_2(long long int dt)
 {
 	long long int	t_end;
 	long long int	t_now;
-	long long int	tmp;
 
-	if (dt <= 0)
+	if (dt <= 50)
 		return (1);
 	t_now = ft_get_micros();
 	t_end = t_now + dt;
-	while (t_now < t_end)
+	while (t_end - t_now > 100)
 	{
-		tmp = t_end - t_now;
-		if (tmp < 50)
-			break ;
-		usleep((t_end - t_now) / 2);
+		usleep((t_end - t_now) * 0.5);
 		t_now = ft_get_micros();
 	}
 	return (1);

@@ -44,47 +44,29 @@ typedef struct s_philo
 	pthread_mutex_t		*mutex_print;
 	pthread_mutex_t		*mutex_meal;
 	long long int		t_last_meal;
-	int					eat_ok;
+	int					n_eats;
 	int					pos;
 	int					*game_over;
 }			t_philo;
 
-int					ft_atoi(const char *str);
+int				ft_atoi(const char *str);
 
-// utils
-int					ft_usleep(long long int dt);
-int					ft_usleep_2(long long int dt);
-long long int		ft_get_micros(void);
-t_globals				*ft_parse_arguments(char **argv, int argc);
-int					ft_init_int_pointer(int **ptr, int val);
+int				ft_usleep(long long int dt);
+int				ft_usleep_2(long long int dt);
+long long int	ft_get_micros(void);
+int				ft_timestp(long long int t_start);
+int				ft_timestp_by_time(long long int t_now, long long int t_start);
+int				ft_print_msg(t_philo *p, char *msg);
 
-// mutex_stuff
-int					ft_init_mutex(t_globals *par);
-int					get_forks(t_philo *par, pthread_mutex_t *mutex_1, \
-								pthread_mutex_t *mutex_2);
+t_globals		*ft_parse_arguments(char **argv, int argc);
+int				ft_init_threads_pointers(pthread_t **philos, int n);
+int				ft_init_int_pointer(int **ptr, int val);
+int				ft_init_mutex(t_globals *par);
+t_philo			**assign_philo_par(t_globals *globals);
 
-// main
-int					did_someone_died(t_philo **philo_p, int n);
-int					have_all_philos_eat_ok(t_philo **philo_par, int n);
-void				start_main_cycle(t_philo **philo_par, t_globals *params);
-void				wait_joined_threads(pthread_t *philo_t, int n);
+int				ft_run_all_philos(pthread_t *philo_t, t_philo **philo_p, t_globals *globals);
+void			*run_philo(void *params);
 
-// philo_utils
-void				free_all(t_philo **philo, pthread_t *philo_t, t_globals *par);
-int					ft_init_threads_pointers(pthread_t **philos, int n);
-t_philo				**assign_philo_par(t_globals *globals);
-int					ft_run_all_philos(pthread_t *philo_th, t_philo **philo_par, \
-										t_globals *globals);
-
-// philo_life
-int					ft_get_meal(t_philo *par, int *eats);
-void				ft_sleep_and_think(t_philo *par, int *eats);
-void				*run_philo(void *params);
-
-// prints
-int					ft_timestp(long long int t_start);
-int					ft_timestp_by_time(long long int t_now, \
-										long long int t_start);
-int					ft_print_msg(t_philo *p, char *msg);
+void			free_all(t_philo **philo, pthread_t *philo_t, t_globals *par);
 
 #endif

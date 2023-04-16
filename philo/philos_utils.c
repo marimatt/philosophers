@@ -12,29 +12,26 @@
 
 #include "./philo.h"
 
-int	ft_run_all_philos(pthread_t *philo_th, t_philo **philo_par, t_globals *globals)
+int	ft_run_all_philos(pthread_t *philo_t, t_philo **philo_p, t_globals *globals)
 {
-	int					pos;
-	long long int		t_start;
+	int				n;
+	long long int	t_start;
 
-	t_start = ft_get_micros();
-	pos = 0;
-	while (pos < globals->n)
+	n = 0;
+	while (n < globals->n)
 	{
-		if (pthread_create(&(philo_th[pos]), NULL, &run_philo, (void *)(philo_par[pos])) != 0)
+		pthread_mutex_lock(philo_p[n]->mutex_meal);
+		if (pthread_create(&(philo_t[n]), NULL, &run_philo, (void *)(philo_p[n])) != 0)
 			return (-1);
-		philo_par[pos]->t_start = t_start;
-		philo_par[pos]->t_last_meal = ft_get_micros();
-		pos += 2;
+		n++;
 	}
-	pos = 1;
-	while (pos < globals->n)
+	t_start = ft_get_micros();
+	while (n > 0)
 	{
-		if (pthread_create(&philo_th[pos], NULL, &run_philo, (void *)(philo_par[pos])) != 0)
-			return (-1);
-		philo_par[pos]->t_start = t_start;
-		philo_par[pos]->t_last_meal = ft_get_micros();
-		pos += 2;
+		n--;
+		philo_p[n]->t_start = t_start;
+		philo_p[n]->t_last_meal = t_start;
+		pthread_mutex_unlock(philo_p[n]->mutex_meal);
 	}
 	return (1);
 }
