@@ -17,8 +17,7 @@ long long int	ft_get_micros()
 	static struct timeval	t;
 
 	gettimeofday(&t, NULL);
-	return ((long long int)((t.tv_sec) * 1000000) + \
-			(long long int)((t.tv_usec)));
+	return ((long long int)((t.tv_sec) * 1000000) + (long long int)((t.tv_usec)));
 }
 
 int	kill_all_pids(int *pid, int len)
@@ -43,7 +42,7 @@ int	kill_all_pids(int *pid, int len)
 
 int	ft_parse_args(t_data **par, char **argv, int argc)
 {
-	if (argc < 5)
+	if (argc < 5 || argc > 6)
 		return (-1);
 	*par = (t_data *)malloc(sizeof(**par));
 	if (par == NULL)

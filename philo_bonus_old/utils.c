@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   prints.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marimatt <marimatt@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/07 13:25:19 by marimatt          #+#    #+#             */
+/*   Updated: 2022/07/21 19:55:40 by marimatt         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./philo.h"
 
 long long int	ft_get_micros()
@@ -31,7 +43,7 @@ int	kill_all_pids(int *pid, int len)
 
 int	ft_parse_args(t_data **par, char **argv, int argc)
 {
-	if (argc < 5)
+	if (argc < 5 || argc > 6)
 		return (-1);
 	*par = (t_data *)malloc(sizeof(**par));
 	if (par == NULL)

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   prints.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marimatt <marimatt@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/07 13:25:19 by marimatt          #+#    #+#             */
+/*   Updated: 2022/07/21 19:55:40 by marimatt         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -56,7 +68,6 @@ void				ft_usleep_till(long long int dt);
 void				ft_case_one_philo(t_data *par);
 int					fork_philos(t_data *par, int **pid);
 
-void				wait_for_forks(t_data *par);
 void				release_forks(sem_t *forks_semaphore);
 
 void				run_philo(t_data *par);

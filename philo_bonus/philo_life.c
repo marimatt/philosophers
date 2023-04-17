@@ -16,8 +16,8 @@ void	print_fork_and_eat(t_data *par)
 {
 	long long int	tmp;
 
-	sem_wait(par->print_semaphore);
 	tmp = ft_get_micros();
+	sem_wait(par->print_semaphore);
 	printf("%d %d has taken a fork\n", (int)((tmp - par->t_start)/ 1000), par->pos);
 	printf("%d %d is eating\n", (int)((tmp - par->t_start) / 1000), par->pos);
 	sem_post(par->print_semaphore);
@@ -29,23 +29,22 @@ int	wait_with_ret(sem_t *sm, int ret)
 	return(ret);
 }
 
-int ft_initial_timing_checks(t_data *par)
-{
-	if (par->pos > par->n / 2)
-	{
-		if (par->t_die < par->t_eat + par->t_sleep || \
-			par->t_die < 2 * par->t_eat)
-			return (-1);
-	}
-	return (1);
-}
+// int ft_initial_timing_checks(t_data *par)
+// {
+// 	if (par->pos > par->n / 2)
+// 	{
+// 		if (par->t_die < par->t_eat + par->t_sleep || par->t_die < 2 * par->t_eat)
+// 			return (-1);
+// 	}
+// 	return (1);
+// }
 
 int	ft_routine(t_data *par)
 {
 	long long int	tmp;
 
-	if (ft_initial_timing_checks(par) < 0)
-		return (-1);
+	// if (ft_initial_timing_checks(par) < 0)
+	// 	return (-1);
 	sem_wait(par->forks_semaphore);
 	if(ft_print_msg(par, "has taken a fork") < 0)
 		return (-1);

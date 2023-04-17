@@ -82,9 +82,9 @@ void	*ft_check_eat(void *params)
 
 int	main(int argc, char **argv)
 {
+	pthread_t	check_eat;
 	t_data		*par;
 	int			*pid;
-	pthread_t	t_check_eat;
 
 	if (ft_parse_args(&par, argv, argc) < 0)
 		return (1);
@@ -96,7 +96,7 @@ int	main(int argc, char **argv)
 	{
 		if (par->n_must_eat > 0)
 		{
-			if (pthread_create(&t_check_eat, NULL, &ft_check_eat, (void *)par) != 0)
+			if (pthread_create(&check_eat, NULL, &ft_check_eat, (void *)par) != 0)
 				kill_all_pids(pid, par->n);
 		}
 		check_and_kill_all_pids(pid, par->n);

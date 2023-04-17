@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   prints.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marimatt <marimatt@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/07/07 13:25:19 by marimatt          #+#    #+#             */
+/*   Updated: 2022/07/21 19:55:40 by marimatt         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./philo.h"
 
 void	ft_clear_stuff(t_data *par)
@@ -56,8 +68,8 @@ void	*ft_check_eat(void *params)
 
 int	main(int argc, char **argv)
 {
-	t_data		*par;
 	pthread_t	t_check_eat;
+	t_data		*par;
 	int			*pid;
 
 	if (ft_parse_args(&par, argv, argc) < 0)
@@ -66,15 +78,12 @@ int	main(int argc, char **argv)
 		return (1);
 	if (ft_init_semaphores(par, 3) < 0)
 		return (1);
+	if (par->n_must_eat > 0 && \
+		pthread_create(&t_check_eat, NULL, &ft_check_eat, (void *)par) != 0)
+		return (1);
 	if (fork_philos(par, &pid) < 0)
 	{
 		kill_all_pids(pid, par->n);
-		return (1);
-	}
-	if (par->n_must_eat > 0 && \
-		pthread_create(&t_check_eat, NULL, &ft_check_eat, (void *)par) != 0)
-	{
-		kill_all_pids(par->pid, par->n);
 		return (1);
 	}
 	waitpid(-1, NULL, 0);

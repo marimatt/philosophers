@@ -63,6 +63,7 @@ int	fork_philos(t_data *par, int **pid)
 			exit(0);
 		}
 		i++;
+		usleep(100);
 	}
 	return (1);
 }
